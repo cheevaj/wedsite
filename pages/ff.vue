@@ -1,103 +1,124 @@
 <template>
-    <v-app dark>
-      <v-navigation-drawer
-        v-model="drawer"
-        :mini-variant="miniVariant"
-        :clipped="clipped"
-        fixed
-        app
-      >
-        <v-list>
-          <v-list-item
-            v-for="(item, i) in items"
-            :key="i"
-            :to="item.to"
-            router
-            exact
-          >
-            <v-list-item-action>
-              <div>ff</div>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-      </v-navigation-drawer>
-      <v-app-bar
-        :clipped-left="clipped"
-        fixed
-        app
-      >
-        <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-        <v-btn
-          icon
-          @click.stop="miniVariant = !miniVariant"
+  <div>
+    <v-window v-model="onboarding" reverse>
+      <v-window-item v-for="item in image" :key="`card-${item}`">
+        <v-card
+          @mouseenter="stopAutoSlide"
+          @mouseleave="startAutoSlide"
+          color="grey"
+          height="100%"
         >
-          <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
-        </v-btn>
-        <v-btn
-          icon
-          @click.stop="clipped = !clipped"
-        >
-          <v-icon>mdi-application</v-icon>
-        </v-btn>
-        <v-btn
-          icon
-          @click.stop="fixed = !fixed"
-        >
-          <v-icon>mdi-minus</v-icon>
-        </v-btn>
-        <v-toolbar-title>{{ title }}</v-toolbar-title>
-        <v-spacer />
-        <v-btn
-          icon
-          @click.stop="rightDrawer = !rightDrawer"
-        >
-          <v-icon>mdi-menu</v-icon>
-        </v-btn>
-      </v-app-bar>
-      <v-main>
-        <v-container>
-          <Nuxt />
-        </v-container>
-      </v-main>
-      
-      <!-- <v-footer
-        :absolute="!fixed"
-        app
-      >
-        <span>&copy; {{ new Date().getFullYear() }}</span> -->
-      <!-- </v-footer> -->
-    </v-app>
-  </template>
-  
-  <script>
-  export default {
-    name: 'DefaultLayout',
-    data () {
-      return {
-        clipped: false,
-        drawer: false,
-        fixed: false,
-        items: [
-          {
-            icon: 'mdi-apps',
-            title: 'Welcome',
-            to: '/'
-          },
-          {
-            icon: 'mdi-chart-bubble',
-            title: 'Inspire',
-            to: '/inspire'
-          }
-        ],
-        miniVariant: false,
-        right: true,
-        rightDrawer: false,
-        title: 'Vuetify.js'
+          <v-row class="fill-height" align="center" justify="center">
+            <v-img style="height: 100%" :src="item">
+              <v-card-actions
+                style="height: 100%"
+                class="justify-space-between"
+              >
+                <v-btn @mouseenter="colorIcon" @mouseleave="colorIcon"  style="height: 100%; width: 15%;background-color: transparent;
+                        box-shadow: none;
+                        border: none;
+                        color:transparent;" text @click="next">
+                  <v-icon :color="colors" size="55"
+                    >mdi-chevron-left</v-icon
+                  >
+                </v-btn>
+                <v-item-group
+                  style="height: 100%"
+                  v-model="onboarding"
+                  mandatory
+                >
+                  <v-item
+                    style="top: 90%"
+                    v-for="item in image"
+                    :key="`card-${item}`"
+                    v-slot="{ active, toggle }"
+                  >
+                    <v-btn
+                      class="mx-1"
+                      :input-value="active"
+                      icon
+                      @click="toggle"
+                      style="
+                        background-color: transparent;
+                        box-shadow: none;
+                        border: none;
+                        color:transparent;
+                      "
+                    >
+                      <v-icon size="55">mdi-minus</v-icon>
+                    </v-btn>
+                  </v-item>
+                </v-item-group>
+                <v-btn @mouseenter="colorIcon" @mouseleave="colorIcon"
+                  style="height: 100%; width: 15%"
+                  text
+                  @click="prev(item)"
+                >
+                  <v-icon size="55" :color="colors"
+                    >mdi-chevron-right</v-icon
+                  >
+                </v-btn>
+              </v-card-actions>
+            </v-img>
+          </v-row>
+        </v-card>
+      </v-window-item>
+    </v-window>
+    <v-row>
+      <v-col cols="4" class=""></v-col>
+      <v-card-text v-if="false" class="red text-center"> fff </v-card-text>
+      <v-card-text v-else class="red text-right"> ggg </v-card-text>
+    </v-row>
+  </div>
+</template>
+<script>
+export default {
+  data: () => ({
+    onboarding: 0,
+    colors:"#e5e5e5",
+    image: [
+      "https://iblaos.com/iblaos/image/slide/20230912154356_2.jpg",
+      "https://iblaos.com/iblaos/image/slide/20230913144236_2.jpg",
+      "https://iblaos.com/iblaos/image/slide/20230913145105_2.jpg",
+    ],
+  }),
+  computed: {
+    length() {
+      return this.image.length;
+    },
+  },
+  methods: {
+    next() {
+      this.onboarding =
+        this.onboarding + 1 === this.length ? 0 : this.onboarding + 1;
+    },
+    prev() {
+      this.onboarding =
+        this.onboarding - 1 < 0 ? this.length - 1 : this.onboarding - 1;
+    },
+    startAutoSlide() {
+      this.autoSlideInterval = setInterval(() => {
+        this.prev();
+      }, 7500); // Slide every 4 seconds (4000 milliseconds)
+
+      // No need to reset this.manualSlide here
+    },
+    stopAutoSlide() {
+      clearInterval(this.autoSlideInterval);
+    },
+    colorIcon(){
+      if (this.colors!="#ffffff"){
+        this.colors="#ffffff";
       }
-    }
-  }
-  </script>
-  
+      else {
+        this.colors="#e5e5e5";
+      }
+    },
+  },
+  mounted() {
+    // Start automatic image slide when the component is mounted
+    this.startAutoSlide();
+  },
+};
+</script>
+

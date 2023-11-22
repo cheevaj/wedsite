@@ -42,13 +42,14 @@
       <v-container style="height: 1000px;"></v-container>
     </v-sheet>
   </v-card> -->
-    <v-app-bar flat app class="color_background">
+    <!-- <v-app-bar height="200" flat app class="color_background">
+      <v-card class="ma-0" height="200" width="100%">
         <v-row>
           <v-col cols="4" class="px-0 color_background" style="height: 140px">
             <v-btn
               text
-              class="pa-0 ma-0"
-              style="width: 100%; height: 100%; border-radius: 0%"
+              class=""
+              style="width: 90%; height: 100%; border-radius: 0%"
             >
               <v-img src="https://iblaos.com/iblaos/image/logo.svg" />
             </v-btn>
@@ -78,7 +79,8 @@
             </v-col>
           </v-col>
         </v-row>
-    </v-app-bar>
+      </v-card>
+    </v-app-bar> -->
     <v-main>
       <v-col
         v-if="showText == 't'"
@@ -120,7 +122,8 @@
           </v-col>
         </v-card-text>
       </v-col>
-      <Nuxt />
+
+        <Nuxt />
     </v-main>
   </v-app>
 </template>
@@ -145,7 +148,7 @@ export default {
 </script>
 <style scoped>
 .color_background {
-  background-color: #9925be;
+  background-color: rgb(102, 48, 143);
   color: #fff;
 }
 </style>
